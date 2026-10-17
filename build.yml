@@ -1,0 +1,30 @@
+name: Build HouseLearning Linux Apps
+
+on:
+  push:
+    branches: [ main ] 
+jobs:
+  release:
+    runs-on: ubuntu-latest 
+
+    steps:
+      - name: Check out the repository code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Clean install dependencies
+        run: npm ci
+
+      - name: Build Linux AppImage & DEB Natively
+        run: npx electron-builder --linux
+
+      - name: Upload Finished App Installers to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: HouseLearning-Linux
+          path: dist/*
